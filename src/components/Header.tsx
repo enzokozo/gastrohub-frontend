@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Box, Menu, MenuItem, Tooltip, Avatar } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Box, Menu, MenuItem, Tooltip } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useThemeMode } from '../theme/ThemeContext';
 import { useAuth } from '../auth/AuthContext';

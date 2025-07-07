@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useEffect} from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -12,7 +12,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-// Definição da estrutura de dados da Kitchen
 interface KitchenFormData {
   id?: string;
   name: string;
@@ -30,7 +29,6 @@ interface FormState {
   score: number;
 }
 
-// Definição das propriedades do componente
 interface Props {
     open: boolean;
     onClose: () => void;

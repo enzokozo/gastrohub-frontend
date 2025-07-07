@@ -5,7 +5,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import type { RestaurantProfile } from '../types';
 
-// O schema de validação permanece o mesmo
 const schema = yup.object().shape({
   name: yup.string().required('O nome é obrigatório'),
   email: yup.string().email('Insira um email válido').required('O email é obrigatório'),
@@ -18,7 +17,6 @@ const schema = yup.object().shape({
     ),
 });
 
-// Usamos InferType para nos ajudar a tipar a função de submit
 type FormValues = yup.InferType<typeof schema>;
 
 interface Props {
@@ -29,7 +27,6 @@ interface Props {
 }
 
 const ProfileEditDialog: React.FC<Props> = ({ open, onClose, onSubmit, userToEdit }) => {
-  // A MUDANÇA CRUCIAL ESTÁ AQUI: REMOVEMOS O <FormData> DO useForm
   const {
     control,
     handleSubmit,
@@ -37,7 +34,7 @@ const ProfileEditDialog: React.FC<Props> = ({ open, onClose, onSubmit, userToEdi
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { // Os valores padrão ajudam na inferência inicial
+    defaultValues: { 
       name: '',
       email: '',
       cnpj: '',
@@ -54,12 +51,10 @@ const ProfileEditDialog: React.FC<Props> = ({ open, onClose, onSubmit, userToEdi
         cnpj: userToEdit.cnpj,
       });
     } else {
-      // Garante que o formulário seja limpo ao abrir para criar
       reset({ name: '', email: '', cnpj: '', password: '', confirmPassword: '' });
     }
   }, [userToEdit, open, reset]);
 
-  // A função de submit agora usa o tipo inferido 'FormValues'
   const onFormSubmit = (data: FormValues) => {
     const dataToSend: Partial<FormValues> = {
       name: data.name,

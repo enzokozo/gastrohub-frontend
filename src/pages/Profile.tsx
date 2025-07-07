@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Container, Typography, Box, Card, CardContent, CircularProgress, Alert, Button, Divider,
-  // 1. Importações que faltavam para os diálogos e notificações
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar
 } from '@mui/material';
 import { jwtDecode } from 'jwt-decode';
@@ -9,9 +8,8 @@ import { useAuth } from '../auth/AuthContext';
 import api from '../api/axios';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
-import ProfileEditDialog from '../components/ProfileEditDialog'; // Assumindo que este componente existe
+import ProfileEditDialog from '../components/ProfileEditDialog';
 
-// Interfaces (sem alteração)
 interface RestaurantData {
   id: number;
   name: string;
@@ -25,19 +23,16 @@ interface DecodedToken {
 }
 
 const Profile: React.FC = () => {
-  // Seus estados existentes
-  const { token, logout } = useAuth(); // Adicionado 'logout'
-  const navigate = useNavigate(); // Adicionado 'navigate'
+  const { token, logout } = useAuth(); 
+  const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState<RestaurantData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // 2. Estados para controlar os diálogos e notificações
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
 
-  // Sua função de buscar dados (sem alteração)
   const fetchProfileData = async () => {
     if (!token) {
       setError('Token não encontrado. Por favor, faça login novamente.');
@@ -63,11 +58,16 @@ const Profile: React.FC = () => {
     fetchProfileData();
   }, [token]);
 
-  // 3. Funções para lidar com a Edição
-  const handleEditSubmit = async (data: Omit<RestaurantData, 'id' | 'score'>) => {
+  const handleEditSubmit = async (data: Partial<{ password?: string; confirmPassword?: string; name?: string; email?: string; cnpj?: string; }>) => {
     if (!restaurant) return;
+    const payload: any = {};
+    if (data.name !== undefined) payload.name = data.name;
+    if (data.email !== undefined) payload.email = data.email;
+    if (data.cnpj !== undefined) payload.cnpj = data.cnpj;
+    if (data.password !== undefined) payload.password = data.password;
+    if (data.confirmPassword !== undefined) payload.confirmPassword = data.confirmPassword;
     try {
-      await api.put(`/restaurants/${restaurant.id}`, data);
+      await api.put(`/restaurants/${restaurant.id}`, payload);
       setNotification('Perfil atualizado com sucesso!');
       setIsEditOpen(false);
       fetchProfileData();
@@ -76,7 +76,6 @@ const Profile: React.FC = () => {
     }
   };
 
-  // 4. Funções para lidar com a Exclusão
   const handleDeleteAccount = async () => {
     if (!restaurant) return;
     try {
@@ -110,7 +109,6 @@ const Profile: React.FC = () => {
         {restaurant && (
           <Card>
             <CardContent>
-              {/* ...Conteúdo do Card... */}
               <Typography variant="h6">Nome:</Typography>
               <Typography color="text.secondary" gutterBottom>{restaurant.name}</Typography>
               <Divider sx={{ my: 2 }} />
@@ -123,7 +121,6 @@ const Profile: React.FC = () => {
               <Typography variant="h6">Score:</Typography>
               <Typography color="text.secondary">{restaurant.score}</Typography>
             </CardContent>
-            {/* 5. Botões agora com as funções onClick */}
             <Box sx={{ p: 2, display: 'flex', gap: 2 }}>
               <Button variant="contained" onClick={() => setIsEditOpen(true)}>Editar Perfil</Button>
               <Button variant="outlined" color="error" onClick={() => setIsDeleteConfirmOpen(true)}>Excluir Conta</Button>
@@ -132,7 +129,6 @@ const Profile: React.FC = () => {
         )}
       </Container>
       
-      {/* 6. Diálogos renderizados aqui, prontos para serem abertos */}
       {restaurant && (
         <ProfileEditDialog
           open={isEditOpen}

@@ -33,7 +33,7 @@ export const CustomThemeProvider = ({ children }: { children: React.ReactNode })
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
       <MuiThemeProvider theme={theme}>
-        <CssBaseline /> {/* Normaliza o CSS e aplica a cor de fundo do tema */}
+        <CssBaseline /> 
         {children}
       </MuiThemeProvider>
     </ThemeContext.Provider>
