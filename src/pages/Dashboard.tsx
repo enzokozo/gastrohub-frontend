@@ -16,6 +16,8 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Grid,
+    Stack,
 } from '@mui/material';
 
 import { Edit, Delete, Add } from '@mui/icons-material';
@@ -141,47 +143,62 @@ const Dashboard: React.FC = () => {
     return (
         <>
             <Header />
-            <Container sx={{ py: 4 }}>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                    <Typography variant="h4" gutterBottom>
-                        Painel de Cozinhas
-                    </Typography>
-                    <Button
-                        variant="contained"
-                        startIcon={<Add />}
-                        onClick={() => handleOpenDialog(null)} // Abre o diálogo para criar uma nova cozinha
+            <Container maxWidth="lg" sx={{ py: 4 }}>
+                {/* Usando Stack para o cabeçalho da página, como no seu exemplo */}
+                <Stack 
+                    direction="row" 
+                    justifyContent="space-between" 
+                    alignItems="center" 
+                    mb={3}
+                >
+                    <Typography variant="h4">Painel de Cozinhas</Typography>
+                    <Button 
+                        variant="contained" 
+                        startIcon={<Add />} 
+                        onClick={() => handleOpenDialog(null)}
                     >
                         Nova Cozinha
                     </Button>
-                </Box>
+                </Stack>
 
-                <Box sx={{display: 'flex', flexWrap: 'wrap', mx: -1.5}}>
-                    {kitchens.map((kitchen) => (
-                        <Box key={kitchen.id} sx={{ px: 1.5, py: 1.5, width: { xs: '100%', sm: '50%', md: '33.33%' } }}>
-                            <Card sx={{ height: '100%' }}>
-                                <CardHeader
-                                    title={kitchen.name}
-                                    action={
-                                        <>
-                                            <IconButton onClick={() => handleOpenDialog(kitchen)}>
-                                                <Edit />
-                                            </IconButton>
-                                            <IconButton onClick={() => handleOpenDeleteConfirm(kitchen)}>
-                                                <Delete />
-                                            </IconButton>
-                                        </>
-                                    }
-                                />
-                                <CardContent>
-                                    <Typography variant="body2" color="text.secondaty">
-                                        {kitchen.location}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Box>
-                    ))}
-                </Box>
-            
+                {/* Lógica de Carregamento e Erro */}
+                {loading ? (
+                    <Box display="flex" justifyContent="center" mt={4}>
+                        <CircularProgress />
+                    </Box>
+                ) : error ? (
+                    <Alert severity="error">{error}</Alert>
+                ) : (
+                    // Usando o layout Grid com a propriedade 'size', conforme sua referência
+                    <Grid container spacing={3}>
+                        {kitchens.map((kitchen) => (
+                            <Grid size={12} key={kitchen.id}>
+                                <Card>
+                                    <CardHeader
+                                        title={kitchen.name}
+                                        action={
+                                            <>
+                                                <IconButton onClick={() => handleOpenDialog(kitchen)}>
+                                                    <Edit />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleOpenDeleteConfirm(kitchen)}>
+                                                    <Delete />
+                                                </IconButton>
+                                            </>
+                                        }
+                                    />
+                                    <CardContent>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {kitchen.location}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
+
+                {/* Diálogos e Notificações */}
                 <KitchenFormDialog
                     open={isDialogOpen}
                     onClose={handleCloseDialog}
@@ -200,9 +217,7 @@ const Dashboard: React.FC = () => {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseDeleteConfirm}>
-                            Cancelar
-                        </Button>
+                        <Button onClick={handleCloseDeleteConfirm}>Cancelar</Button>
                         <Button onClick={handleDelete} color="error" variant="contained">
                             Confirmar Exclusão
                         </Button>

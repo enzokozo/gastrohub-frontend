@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Box, Button, TextField, Typography, Container, Snackbar, Alert,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import api from '../api/axios';
 import { useForm, Controller } from 'react-hook-form';
@@ -55,12 +55,12 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Container component="main" >
+      <Box >
         <Typography component="h1" variant="h5">
           Login - GastroHub
         </Typography>
-        <Box component="form" onSubmit={handleSubmit(onFormSubmit)} sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit(onFormSubmit)}>
           <Controller
             name="email"
             control={control}
@@ -103,6 +103,13 @@ const Login: React.FC = () => {
           >
             Entrar
           </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Link to="/register" style={{ textDecoration: 'none' }}>
+              <Typography variant="body2" color="primary">
+                Não tem uma conta? Cadastre-se
+              </Typography>
+            </Link>
+          </Box>
         </Box>
       </Box>
       <Snackbar open={!!apiError} autoHideDuration={6000} onClose={() => setApiError('')}>
